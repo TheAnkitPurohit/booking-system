@@ -15,9 +15,10 @@ export const profileSchema = z.object({
 
 export function validateWithZodSchema<T>(
   schema: ZodSchema<T>,
-  data: unknown,
+  data: unknown
 ): T {
   const result = schema.safeParse(data);
+  console.log(result.error);
   if (!result.success) {
     const errors = result.error.errors.map((error) => error.message);
 
@@ -37,12 +38,12 @@ function validateFile() {
     .instanceof(File)
     .refine(
       (file) => !file || file.size <= maxUploadSize,
-      `File size must be less than 1 MB`,
+      `File size must be less than 1 MB`
     )
     .refine(
       (file) =>
         !file || acceptedFileTypes.some((type) => file.type.startsWith(type)),
-      "File must be an image",
+      "File must be an image"
     );
 }
 
@@ -74,7 +75,7 @@ export const propertySchema = z.object({
     },
     {
       message: "description must be between 10 and 1000 words.",
-    },
+    }
   ),
   country: z.string(),
   guests: z.coerce.number().int().min(0, {
