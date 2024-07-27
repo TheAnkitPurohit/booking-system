@@ -15,7 +15,7 @@ export const profileSchema = z.object({
 
 export function validateWithZodSchema<T>(
   schema: ZodSchema<T>,
-  data: unknown
+  data: unknown,
 ): T {
   const result = schema.safeParse(data);
   if (!result.success) {
@@ -37,11 +37,11 @@ function validateFile() {
     .instanceof(File)
     .refine(
       (file) => !file || file.size <= maxUploadSize,
-      `File size must be less than 1 MB`
+      `File size must be less than 1 MB`,
     )
     .refine(
       (file) =>
         !file || acceptedFileTypes.some((type) => file.type.startsWith(type)),
-      "File must be an image"
+      "File must be an image",
     );
 }
