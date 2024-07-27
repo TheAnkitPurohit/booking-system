@@ -20,7 +20,7 @@ const DynamicMap = dynamic(
   {
     ssr: false,
     loading: () => <Skeleton className="h-[400px] w-full" />,
-  }
+  },
 );
 
 async function PropertyDetailsPage({ params }: { params: { id: string } }) {
