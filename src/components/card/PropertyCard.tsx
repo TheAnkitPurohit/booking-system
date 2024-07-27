@@ -5,7 +5,7 @@ import { PropertyCardProps } from "@/utils/types";
 
 import PropertyRating from "./PropertyRating";
 import CountryFlagAndName from "./CountryFlagAndName";
-import FavoriteToggleButton from "./FavoriteToggleForm";
+import FavoriteToggleButton from "./FavoriteToggleButton";
 
 function PropertyCard({ property }: { property: PropertyCardProps }) {
   const { name, image, price } = property;
