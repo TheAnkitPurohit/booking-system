@@ -14,7 +14,7 @@ function NavSearch() {
   const pathname = usePathname();
   const { replace } = useRouter();
   const [search, setSearch] = useState(
-    searchParams.get("search")?.toString() || ""
+    searchParams.get("search")?.toString() || "",
   );
   const handleSearch = useDebouncedCallback((value: string) => {
     const params = new URLSearchParams(searchParams);
