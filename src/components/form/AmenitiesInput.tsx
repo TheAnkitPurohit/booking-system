@@ -6,7 +6,7 @@ import { Amenity, amenities } from "@/utils/amenities";
 
 function AmenitiesInput({ defaultValue }: { defaultValue?: Amenity[] }) {
   const [selectedAmenities, setSelectedAmenities] = useState<Amenity[]>(
-    defaultValue || amenities
+    defaultValue || amenities,
   );
 
   const handleChange = (amenity: Amenity) => {
@@ -16,7 +16,7 @@ function AmenitiesInput({ defaultValue }: { defaultValue?: Amenity[] }) {
           return { ...a, selected: !a.selected };
         }
         return a;
-      })
+      }),
     );
   };
 
