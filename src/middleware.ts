@@ -1,16 +1,16 @@
+/* eslint-disable consistent-return */
+import { NextResponse } from "next/server";
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const isProtectedRoute = createRouteMatcher([
-  "/bookings(.*)",
-  "/checkout(.*)",
-  "/favorites(.*)",
-  "/profile(.*)",
-  "/rentals(.*)",
-  "/reviews(.*)",
-]);
+const isPublicRoute = createRouteMatcher(["/", "/properties(.*)"]);
 
-export default clerkMiddleware((auth, req) => {
-  if (isProtectedRoute(req)) auth().protect();
+const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
+export default clerkMiddleware(async (auth, req) => {
+  const isAdminUser = auth().userId === process.env.ADMIN_USER_ID;
+  if (isAdminRoute(req) && !isAdminUser) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+  if (!isPublicRoute(req)) auth().protect();
 });
 
 export const config = {

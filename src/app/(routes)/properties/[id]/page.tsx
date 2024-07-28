@@ -3,24 +3,33 @@ import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
-import { fetchPropertyDetails } from "@/utils/actions";
 import UserInfo from "@/components/properties/UserInfo";
 import Amenities from "@/components/properties/Amenities";
+import SubmitReview from "@/components/reviews/SubmitReview";
+import PropertyRating from "@/components/card/PropertyRating";
 import BreadCrumbs from "@/components/properties/BreadCrumbs";
 import ShareButton from "@/components/properties/ShareButton";
-import PropertyRating from "@/components/card/PropertyRating";
 import Description from "@/components/properties/Description";
+import PropertyReviews from "@/components/reviews/PropertyReviews";
 import ImageContainer from "@/components/properties/ImageContainer";
 import PropertyDetails from "@/components/properties/PropertyDetails";
 import FavoriteToggleButton from "@/components/card/FavoriteToggleButton";
-import BookingCalendar from "@/components/properties/booking/BookingCalendar";
+import { findExistingReview, fetchPropertyDetails } from "@/utils/actions";
 
 const DynamicMap = dynamic(
   () => import("@/components/properties/PropertyMap"),
   {
     ssr: false,
     loading: () => <Skeleton className="h-[400px] w-full" />,
-  }
+  },
+);
+
+const DynamicBookingWrapper = dynamic(
+  () => import("@/components/booking/BookingWrapper"),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-[200px] w-full" />,
+  },
 );
 
 async function PropertyDetailsPage({ params }: { params: { id: string } }) {
@@ -33,8 +42,8 @@ async function PropertyDetailsPage({ params }: { params: { id: string } }) {
 
   const { userId } = auth();
   const isNotOwner = property.profile.clerkId !== userId;
-  // const reviewDoesNotExist =
-  //   userId && isNotOwner && !(await findExistingReview(userId, property.id));
+  const reviewDoesNotExist =
+    userId && isNotOwner && !(await findExistingReview(userId, property.id));
   return (
     <section>
       <BreadCrumbs name={property.name} />
@@ -62,10 +71,18 @@ async function PropertyDetailsPage({ params }: { params: { id: string } }) {
         </div>
         <div className="lg:col-span-4 flex flex-col items-center">
           {/* calendar */}
-          <BookingCalendar />
+          <DynamicBookingWrapper
+            propertyId={property.id}
+            price={property.price}
+            bookings={property.bookings}
+          />
         </div>
       </section>
+      {/* after two column section */}
+      {reviewDoesNotExist && <SubmitReview propertyId={property.id} />}
+      <PropertyReviews propertyId={property.id} />
     </section>
   );
 }
+
 export default PropertyDetailsPage;
