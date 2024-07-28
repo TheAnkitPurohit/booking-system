@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { links } from "@/utils/links";
+import { auth } from "@clerk/nextjs/server";
 import { LuAlignLeft } from "react-icons/lu";
-import { Button } from "@/components/ui/button";
 import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
 import {
   DropdownMenu,
@@ -12,9 +12,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import UserIcon from "./UserIcon";
+import { Button } from "../ui/button";
 import SignOutLink from "./SignOutLink";
 
 function LinksDropdown() {
+  const { userId } = auth();
+  const isAdminUser = userId === process.env.ADMIN_USER_ID;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -42,13 +45,16 @@ function LinksDropdown() {
           </DropdownMenuItem>
         </SignedOut>
         <SignedIn>
-          {links.map((link) => (
-            <DropdownMenuItem key={link.href}>
-              <Link href={link.href} className="capitalize w-full">
-                {link.label}
-              </Link>
-            </DropdownMenuItem>
-          ))}
+          {links.map((link) => {
+            if (link.label === "admin" && !isAdminUser) return null;
+            return (
+              <DropdownMenuItem key={link.href}>
+                <Link href={link.href} className="capitalize w-full">
+                  {link.label}
+                </Link>
+              </DropdownMenuItem>
+            );
+          })}
           <DropdownMenuSeparator />
           <DropdownMenuItem>
             <SignOutLink />
