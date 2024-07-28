@@ -3,16 +3,18 @@ import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
-import { fetchPropertyDetails } from "@/utils/actions";
 import UserInfo from "@/components/properties/UserInfo";
 import Amenities from "@/components/properties/Amenities";
+import SubmitReview from "@/components/reviews/SubmitReview";
 import BreadCrumbs from "@/components/properties/BreadCrumbs";
 import ShareButton from "@/components/properties/ShareButton";
 import PropertyRating from "@/components/card/PropertyRating";
 import Description from "@/components/properties/Description";
+import PropertyReviews from "@/components/reviews/PropertyReviews";
 import ImageContainer from "@/components/properties/ImageContainer";
 import PropertyDetails from "@/components/properties/PropertyDetails";
 import FavoriteToggleButton from "@/components/card/FavoriteToggleButton";
+import { findExistingReview, fetchPropertyDetails } from "@/utils/actions";
 import BookingCalendar from "@/components/properties/booking/BookingCalendar";
 
 const DynamicMap = dynamic(
@@ -20,7 +22,7 @@ const DynamicMap = dynamic(
   {
     ssr: false,
     loading: () => <Skeleton className="h-[400px] w-full" />,
-  },
+  }
 );
 
 async function PropertyDetailsPage({ params }: { params: { id: string } }) {
@@ -28,13 +30,13 @@ async function PropertyDetailsPage({ params }: { params: { id: string } }) {
   if (!property) redirect("/");
   const { baths, bedrooms, beds, guests } = property;
   const details = { baths, bedrooms, beds, guests };
-  const { firstName } = property.profile;
-  const { profileImage } = property.profile;
+  const { firstName, profileImage } = property.profile;
 
   const { userId } = auth();
   const isNotOwner = property.profile.clerkId !== userId;
-  // const reviewDoesNotExist =
-  //   userId && isNotOwner && !(await findExistingReview(userId, property.id));
+  const reviewDoesNotExist =
+    userId && isNotOwner && !(await findExistingReview(userId, property.id));
+
   return (
     <section>
       <BreadCrumbs name={property.name} />
@@ -65,6 +67,9 @@ async function PropertyDetailsPage({ params }: { params: { id: string } }) {
           <BookingCalendar />
         </div>
       </section>
+      {/* after two column section */}
+      {reviewDoesNotExist && <SubmitReview propertyId={property.id} />}
+      <PropertyReviews propertyId={property.id} />
     </section>
   );
 }
