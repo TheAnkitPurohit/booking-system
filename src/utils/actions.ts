@@ -24,7 +24,7 @@ const renderError = (error: unknown): { message: string } => {
 
 export const createProfileAction = async (
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ) => {
   try {
     const user = await currentUser();
@@ -93,7 +93,7 @@ export const fetchProfile = async () => {
 
 export const updateProfileAction = async (
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ): Promise<{ message: string }> => {
   const user = await getAuthUser();
   try {
@@ -116,7 +116,7 @@ export const updateProfileAction = async (
 
 export const updateProfileImageAction = async (
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ) => {
   const user = await getAuthUser();
   try {
@@ -141,7 +141,7 @@ export const updateProfileImageAction = async (
 
 export const createPropertyAction = async (
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ): Promise<{ message: string }> => {
   const user = await getAuthUser();
   try {
@@ -506,7 +506,7 @@ export const fetchRentals = async () => {
         totalNightsSum: totalNightsSum._sum.totalNights,
         orderTotalSum: orderTotalSum._sum.orderTotal,
       };
-    })
+    }),
   );
 
   return rentalsWithBookingSums;

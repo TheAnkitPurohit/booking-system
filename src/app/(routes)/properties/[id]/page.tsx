@@ -21,7 +21,7 @@ const DynamicMap = dynamic(
   {
     ssr: false,
     loading: () => <Skeleton className="h-[400px] w-full" />,
-  }
+  },
 );
 
 const DynamicBookingWrapper = dynamic(
@@ -29,7 +29,7 @@ const DynamicBookingWrapper = dynamic(
   {
     ssr: false,
     loading: () => <Skeleton className="h-[200px] w-full" />,
-  }
+  },
 );
 
 async function PropertyDetailsPage({ params }: { params: { id: string } }) {
